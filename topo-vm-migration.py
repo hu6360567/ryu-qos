@@ -10,7 +10,7 @@ from mininet.node import RemoteController, OVSKernelSwitch
 from mininet.cli import CLI
 from mininet.log import setLogLevel
 from mininet.link import TCLink
-import mininet.util
+import os
 
 
 def topology(remoteip, ofversion):
@@ -36,6 +36,10 @@ def topology(remoteip, ofversion):
     net.addLink(switch1, switch3, 1, 1, **switchLinkOpts)
     net.addLink(switch2, switch3, 1, 2, **switchLinkOpts)
     net.addLink(vm, switch1, 0, 2, **hostLinkOpts)
+
+    print "*** Removing former QoS & Queue"
+    os.popen("ovs-vsctl --all destroy qos")
+    os.popen("ovs-vsctl --all destroy queue")
 
     print "*** Starting network"
     net.build()
